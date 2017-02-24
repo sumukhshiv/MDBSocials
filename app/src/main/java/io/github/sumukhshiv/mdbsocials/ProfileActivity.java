@@ -3,25 +3,21 @@ package io.github.sumukhshiv.mdbsocials;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class NewSocialActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     public final static int REQUEST_CAMERA = 1;
     public static final int GET_FROM_GALLERY = 3;
@@ -29,19 +25,15 @@ public class NewSocialActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_social);
+        setContentView(R.layout.activity_profile);
 
-        EditText editTextEventName = (EditText) findViewById(R.id.editTextEventName);
-        Button buttonUploadPicture = (Button) findViewById(R.id.buttonUploadPicture);
-        EditText editTextDate = (EditText) findViewById(R.id.editTextDate);
-        EditText editTextDescription = (EditText) findViewById(R.id.editTextDescription);
-        ImageView imageViewUploadPhoto = (ImageView) findViewById(R.id.imageViewUploadPhoto);
-        Button buttonPost = (Button) findViewById(R.id.buttonPost);
+        Button buttonSaveProfileUpdate = (Button) findViewById(R.id.buttonSaveProfileUpdate);
+        ImageView updateProfilePicture = (ImageView) findViewById(R.id.imageViewUpdateProfilePicture);
 
-        buttonUploadPicture.setOnClickListener(new View.OnClickListener() {
+        updateProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(NewSocialActivity.this).create();
+                AlertDialog alertDialog = new AlertDialog.Builder(ProfileActivity.this).create();
                 alertDialog.setTitle("Set a Photo");
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Take a Photo",
                         new DialogInterface.OnClickListener() {
@@ -63,10 +55,8 @@ public class NewSocialActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
-
             }
         });
-
     }
 
     @Override
@@ -81,7 +71,7 @@ public class NewSocialActivity extends AppCompatActivity {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 //BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-                ((ImageView) findViewById(R.id.imageViewUploadPhoto)).setImageBitmap(bitmap);
+                ((ImageView) findViewById(R.id.imageViewUpdateProfilePicture)).setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

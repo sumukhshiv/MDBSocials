@@ -8,4 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="custom_dark" parent="AppTheme">
+        <item name="colorPrimary">@color/common_google_signin_btn_text_dark_focused</item>
+        <item name="colorPrimaryDark">@color/common_google_signin_btn_text_dark_focused</item>
+    </style>
+
+    <style name="custom_dark.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="custom_dark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="custom_dark.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
