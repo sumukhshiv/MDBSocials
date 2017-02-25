@@ -108,10 +108,11 @@ public class NewSocialActivity extends AppCompatActivity {
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        ArrayList<String> memberArrayList = new ArrayList<String>();
-                        memberArrayList.add(firebaseUser.getUid());
+//                        ArrayList<String> memberArrayList = new ArrayList<String>();
+//                        memberArrayList.add(firebaseUser.getUid());
                         Social socialToPost = new Social(editTextEventName.getText().toString(), editTextDate.getText().toString(), editTextDescription.getText().toString(),
-                                imageKey + ".png", firebaseUser.getEmail(), 1, memberArrayList);
+                                imageKey + ".png", firebaseUser.getEmail(), 1);
+                        socialToPost.peopleInterested.add(firebaseUser.getUid());
                         myRef.child(imageKey).setValue(socialToPost);
                         Toast.makeText(getApplicationContext(), "Posted new Social!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), UserArea.class);

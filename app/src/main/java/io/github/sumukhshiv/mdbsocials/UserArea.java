@@ -1,9 +1,13 @@
 package io.github.sumukhshiv.mdbsocials;
 
 import android.content.Intent;
+import android.renderscript.Sampler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +19,21 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class UserArea extends AppCompatActivity {
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("/socials");
+    ArrayList<Social> arrayListSocials;
+    ValueEventListener mSocialsEventListener;
+    SocialsAdapter toSetSocialsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +112,59 @@ public class UserArea extends AppCompatActivity {
                 }
             }
         });
+
+
+        //RECYCLER VIEW STUFF
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewFeed);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        arrayListSocials = new ArrayList<>();
+
+        toSetSocialsAdapter = new SocialsAdapter(getApplicationContext(), arrayListSocials);
+
+        recyclerView.setAdapter(toSetSocialsAdapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mSocialsEventListener == null) {
+            mSocialsEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                        // TODO: handle the post
+                        //Create a new Social Object
+                        String name = postSnapshot.child("nameOfEvent").getValue(String.class);
+                        String date = postSnapshot.child("date").getValue(String.class);
+                        String description = postSnapshot.child("description").getValue(String.class);
+                        String image = postSnapshot.child("image").getValue(String.class);
+                        String emailOfHost = postSnapshot.child("emailOfHost").getValue(String.class);
+                        int numberInterested = postSnapshot.child("numberIntersted").getValue(Integer.class);
+                        Social newSocial = new Social(name, date, description, image, emailOfHost, numberInterested);
+                        arrayListSocials.add(newSocial);
+                        Log.d("DEBUG", arrayListSocials.size() + "");
+                    }
+                    toSetSocialsAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                    // ...
+                }
+            };
+            myRef.addValueEventListener(mSocialsEventListener);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mSocialsEventListener != null) {
+            myRef.removeEventListener(mSocialsEventListener);
+        }
     }
 
 //    @Override

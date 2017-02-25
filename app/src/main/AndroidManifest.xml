@@ -19,7 +19,8 @@
         <activity android:name=".LogInActivity" />
         <activity android:name=".UserArea" />
         <activity android:name=".NewSocialActivity" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".DetailScreenActivity"></activity>
     </application>
 
 </manifest>
