@@ -228,8 +228,9 @@ public class SignUpActivity extends AppCompatActivity {
                         } else if (task.isSuccessful()) {
                             progressDialog.dismiss();
                             Toast.makeText(SignUpActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
-                            finish();
-                            startActivity(new Intent(SignUpActivity.this, UserArea.class));
+                            Intent signupToFeedIntent = new Intent(SignUpActivity.this, UserArea.class);
+                            signupToFeedIntent.putExtra("email", email);
+                            startActivity(signupToFeedIntent);
                         }
 
 

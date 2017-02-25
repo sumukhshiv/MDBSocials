@@ -60,7 +60,7 @@ public class LogInActivity extends AppCompatActivity {
 
 
     public void userLogin() {
-        String email = editTextEmailLogin.getText().toString().trim();
+        final String email = editTextEmailLogin.getText().toString().trim();
         String password = editTextPasswordLogin.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
@@ -84,8 +84,10 @@ public class LogInActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
                             Toast.makeText(LogInActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                            finish();
-                            startActivity(new Intent(LogInActivity.this, UserArea.class));
+                            //finish();
+                            Intent loginToFeedIntent = new Intent(LogInActivity.this, UserArea.class);
+                            loginToFeedIntent.putExtra("email", email);
+                            startActivity(loginToFeedIntent);
                         } else if (!task.isSuccessful()) {
                             Toast.makeText(LogInActivity.this, "Email/Password combination is not correct. Please Try Again.", Toast.LENGTH_LONG).show();
                         }

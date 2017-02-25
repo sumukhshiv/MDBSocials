@@ -6,21 +6,41 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
 
     public final static int REQUEST_CAMERA = 1;
     public static final int GET_FROM_GALLERY = 3;
+    Intent data;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("users");
+    private StorageReference mStorageRef;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +49,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         Button buttonSaveProfileUpdate = (Button) findViewById(R.id.buttonSaveProfileUpdate);
         ImageView updateProfilePicture = (ImageView) findViewById(R.id.imageViewUpdateProfilePicture);
+        final EditText editTextUpdateName = (EditText) findViewById(R.id.editTextUpdateName);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
 
         updateProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +81,34 @@ public class ProfileActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+
+        buttonSaveProfileUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com");
+                final String imageKey = myRef.child("users").push().getKey();
+                StorageReference imageRef = mStorageRef.child(imageKey + ".png");
+
+                imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Profile updatedProfile = new Profile(editTextUpdateName.getText().toString(), firebaseUser.getEmail(), imageKey + ".png" , new ArrayList<String>() );
+                        myRef.child(firebaseUser.getUid()).setValue(updatedProfile);
+                        Toast.makeText(getApplicationContext(), "Updated your Profile!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), UserArea.class);
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+        });
     }
 
     @Override
@@ -80,5 +132,7 @@ public class ProfileActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        this.data = data;
     }
 }

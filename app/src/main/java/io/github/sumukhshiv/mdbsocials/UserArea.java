@@ -55,6 +55,7 @@ public class UserArea extends AppCompatActivity {
         final ListView mDrawerList;
         final ArrayAdapter<String> mAdapter;
         String[] optionsArray = {"Update Profile", "Create New Social", "Logout"};
+        final Intent grabIntent = getIntent();
 
         mDrawerList = (ListView) findViewById(R.id.navList);
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionsArray);
@@ -75,11 +76,13 @@ public class UserArea extends AppCompatActivity {
 
                         if(item.equalsIgnoreCase("Update Profile")){
                             Intent updateProfileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            updateProfileIntent.putExtra("email", grabIntent.getStringExtra("email"));
                             startActivity(updateProfileIntent);
                         }
 
                         if(item.equalsIgnoreCase("Create New Social")){
                             Intent newSocialIntent = new Intent(getApplicationContext(), NewSocialActivity.class);
+                            newSocialIntent.putExtra("email", grabIntent.getStringExtra("email"));
                             startActivity(newSocialIntent);
                         }
 
