@@ -19,7 +19,7 @@ public class Social implements Serializable{
     int numberIntersted;
     ArrayList<String> peopleInterested;
 
-    public Social(String nameOfEvent, String date, String description, String image, String emailOfHost, int numberIntersted) {
+    public Social(String nameOfEvent, String date, String description, String image, String emailOfHost, int numberIntersted, ArrayList<String> peopleInterested) {
         this.nameOfEvent = nameOfEvent;
         this.date = date;
         this.description = description;
@@ -27,7 +27,7 @@ public class Social implements Serializable{
         this.emailOfHost = emailOfHost;
 //        this.timeStamp = timeStamp;
         this.numberIntersted = numberIntersted;
-        this.peopleInterested = new ArrayList<String>();
+        this.peopleInterested = peopleInterested;
     }
 
 //    public Drawable getImage() {

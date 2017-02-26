@@ -20,7 +20,8 @@
         <activity android:name=".UserArea" />
         <activity android:name=".NewSocialActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".DetailScreenActivity"></activity>
+        <activity android:name=".DetailScreenActivity" />
+        <activity android:name=".InterestedMembersActivity"></activity>
     </application>
 
 </manifest>

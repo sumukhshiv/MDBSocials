@@ -24,9 +24,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -96,29 +99,58 @@ public class NewSocialActivity extends AppCompatActivity {
         buttonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com");
-                final String imageKey = myRef.child("socials").push().getKey();
-                StorageReference imageRef = mStorageRef.child(imageKey + ".png");
 
-                imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DatabaseReference myRef = database.getReference("/users").child(firebaseUser.getUid());
+
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Object user = dataSnapshot.child("email").getValue();
+
+                        if (user == null) {
+                            Toast.makeText(getApplicationContext(), "Please Update Profile!",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            final DatabaseReference myRef = database.getReference("/socials");
+
+                            mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com");
+                            final String imageKey = myRef.child("socials").push().getKey();
+                            StorageReference imageRef = mStorageRef.child(imageKey + ".png");
+
+                            imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    ArrayList<String> memberArrayList = new ArrayList<String>();
+                                    memberArrayList.add(firebaseUser.getUid());
+                                    Social socialToPost = new Social(editTextEventName.getText().toString(), editTextDate.getText().toString(), editTextDescription.getText().toString(),
+                                            imageKey + ".png", firebaseUser.getEmail(), 1, memberArrayList);
+//                        socialToPost.peopleInterested.add(firebaseUser.getUid());
+                                    myRef.child(imageKey).setValue(socialToPost);
+                                    Toast.makeText(getApplicationContext(), "Posted new Social!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), UserArea.class);
+                                    startActivity(intent);
+                                }
+                            });
+
+
+                        }
+
                     }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        ArrayList<String> memberArrayList = new ArrayList<String>();
-//                        memberArrayList.add(firebaseUser.getUid());
-                        Social socialToPost = new Social(editTextEventName.getText().toString(), editTextDate.getText().toString(), editTextDescription.getText().toString(),
-                                imageKey + ".png", firebaseUser.getEmail(), 1);
-                        socialToPost.peopleInterested.add(firebaseUser.getUid());
-                        myRef.child(imageKey).setValue(socialToPost);
-                        Toast.makeText(getApplicationContext(), "Posted new Social!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), UserArea.class);
-                        startActivity(intent);
+                    public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
+
+
 
             }
         });

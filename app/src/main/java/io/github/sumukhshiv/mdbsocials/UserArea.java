@@ -17,12 +17,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -39,6 +41,8 @@ public class UserArea extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
+
+
 
 //        Button logoutButton = (Button) findViewById(R.id.buttonLogout);
 //        Button buttonNewSocial = (Button) findViewById(R.id.buttonNewSocial);
@@ -77,6 +81,8 @@ public class UserArea extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.navList);
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionsArray);
         mDrawerList.setAdapter(mAdapter);
+
+        Toast.makeText(UserArea.this, "Swipe from the left for more options", Toast.LENGTH_LONG).show();
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -128,6 +134,7 @@ public class UserArea extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        Toast.makeText(UserArea.this, "Swipe from the left for more options", Toast.LENGTH_LONG).show();
         if (mSocialsEventListener == null) {
             mSocialsEventListener = new ValueEventListener() {
                 @Override
@@ -141,7 +148,9 @@ public class UserArea extends AppCompatActivity {
                         String image = postSnapshot.child("image").getValue(String.class);
                         String emailOfHost = postSnapshot.child("emailOfHost").getValue(String.class);
                         int numberInterested = postSnapshot.child("numberIntersted").getValue(Integer.class);
-                        Social newSocial = new Social(name, date, description, image, emailOfHost, numberInterested);
+                        GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>() {};
+                        ArrayList<String> listOfUsersInSocial = postSnapshot.child("peopleInterested").getValue(t);
+                        Social newSocial = new Social(name, date, description, image, emailOfHost, numberInterested, listOfUsersInSocial);
                         arrayListSocials.add(newSocial);
                         Log.d("DEBUG", arrayListSocials.size() + "");
                     }
@@ -159,13 +168,7 @@ public class UserArea extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mSocialsEventListener != null) {
-            myRef.removeEventListener(mSocialsEventListener);
-        }
-    }
+
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
