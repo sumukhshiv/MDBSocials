@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +26,7 @@ import static android.graphics.Color.GREEN;
 import static android.graphics.Color.RED;
 import static android.graphics.Color.YELLOW;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button buttonRegisterUser;
     private EditText editTextEmail;
@@ -46,6 +47,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         buttonRegisterUser = (Button) findViewById(R.id.buttonRegisterSignUp);
+        buttonRegisterUser.setOnClickListener(this);
+
         editTextEmail = (EditText) findViewById(R.id.editTextEmailSignUp);
         editTextPassword = (EditText) findViewById(R.id.editTextPasswordSignup);
 
@@ -58,23 +61,15 @@ public class SignUpActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-//                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d("AUTHinSignup", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-//                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.d("AUTHinSignUp", "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
 
         editTextPassword.addTextChangedListener(mTextEditorWatcher);
-
-        buttonRegisterUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerUser();
-            }
-        });
 
     }
 
@@ -97,8 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         public void beforeTextChanged(CharSequence s, int start, int count, int after)
         {
-            // When No Password Entered
-            textViewPasswordStrengthIndiactor.setText("Not Entered");
+
         }
 
         public void onTextChanged(CharSequence s, int start, int before, int count)
@@ -108,78 +102,62 @@ public class SignUpActivity extends AppCompatActivity {
 
         public void afterTextChanged(Editable s)
         {
-            if(s.length()==0) {
-                textViewPasswordStrengthIndiactor.setText("Not Entered");
-                textViewPasswordStrengthIndiactor.setTextColor(DKGRAY);
-                textViewPasswordGraphic.setBackgroundColor(DKGRAY);
-                textViewPasswordGraphic.setWidth(0);
-                textViewPasswordGraphic.setHeight(12);
-            }
-            else if(s.length()<6) {
-                textViewPasswordStrengthIndiactor.setText("Must be at least 6 digits");
-                textViewPasswordStrengthIndiactor.setTextColor(DKGRAY);
-                textViewPasswordGraphic.setBackgroundColor(DKGRAY);
-                textViewPasswordGraphic.setWidth(50);
-                textViewPasswordGraphic.setHeight(12);
-            }
+            switch (s.length()) {
+                case 0:
+                    textViewPasswordStrengthIndiactor.setTextColor(DKGRAY);
+                    textViewPasswordGraphic.setBackgroundColor(DKGRAY);
+                    textViewPasswordGraphic.setWidth(0);
+                    textViewPasswordGraphic.setHeight(12);
+                    break;
+                case (1):
+                    textViewPasswordStrengthIndiactor.setText("Must be at least 6 digits");
+                    textViewPasswordStrengthIndiactor.setTextColor(DKGRAY);
+                    textViewPasswordGraphic.setBackgroundColor(DKGRAY);
+                    textViewPasswordGraphic.setWidth(50);
+                    textViewPasswordGraphic.setHeight(12);
+                    break;
+                case 6:
+                    textViewPasswordStrengthIndiactor.setText("Easy");
+                    textViewPasswordGraphic.setBackgroundColor(RED);
+                    textViewPasswordGraphic.setWidth(200);
+                    textViewPasswordGraphic.setHeight(12);
+                    break;
+                case 8:
+                    textViewPasswordStrengthIndiactor.setText("Easy");
+                    textViewPasswordGraphic.setBackgroundColor(RED);
+                    textViewPasswordGraphic.setWidth(300);
+                    textViewPasswordGraphic.setHeight(12);
+                    break;
 
-            else if(s.length()<8) {
-                textViewPasswordStrengthIndiactor.setText("Easy");
-//                textViewPasswordStrengthIndiactor.setTextColor(RED);
-                textViewPasswordGraphic.setBackgroundColor(RED);
-                textViewPasswordGraphic.setWidth(200);
-                textViewPasswordGraphic.setHeight(12);
-            }
+                case 11:
+                    textViewPasswordStrengthIndiactor.setText("Medium");
+                    textViewPasswordGraphic.setBackgroundColor(YELLOW);
+                    textViewPasswordGraphic.setWidth(400);
+                    textViewPasswordGraphic.setHeight(12);
+                    break;
 
-            else if(s.length()<11) {
-                textViewPasswordStrengthIndiactor.setText("Easy");
-//                textViewPasswordStrengthIndiactor.setTextColor(RED);
-                textViewPasswordGraphic.setBackgroundColor(RED);
-                textViewPasswordGraphic.setWidth(300);
-                textViewPasswordGraphic.setHeight(12);
-            }
+                case 13:
+                    textViewPasswordStrengthIndiactor.setText("Medium");
+                    textViewPasswordGraphic.setBackgroundColor(YELLOW);
+                    textViewPasswordGraphic.setWidth(500);
+                    textViewPasswordGraphic.setHeight(12);
+                    break;
+                case 15:
+                    textViewPasswordStrengthIndiactor.setText("Strong");
+                    textViewPasswordGraphic.setBackgroundColor(GREEN);
+                    textViewPasswordGraphic.setWidth(850);
+                    textViewPasswordGraphic.setHeight(12);
+                    break;
+                case 17:
+                    textViewPasswordStrengthIndiactor.setText("Strong");
+                    textViewPasswordGraphic.setBackgroundColor(GREEN);
+                    textViewPasswordGraphic.setWidth(950);
+                    textViewPasswordGraphic.setHeight(12);
+                    break;
+                case 20:
+                    textViewPasswordStrengthIndiactor.setText("Password Max Length Reached");
+                    textViewPasswordGraphic.setBackgroundColor(DKGRAY);
 
-            else if(s.length()<13) {
-                textViewPasswordStrengthIndiactor.setText("Medium");
-//                textViewPasswordStrengthIndiactor.setTextColor(YELLOW);
-                textViewPasswordGraphic.setBackgroundColor(YELLOW);
-                textViewPasswordGraphic.setWidth(400);
-                textViewPasswordGraphic.setHeight(12);
-            }
-
-            else if(s.length()<15) {
-                textViewPasswordStrengthIndiactor.setText("Medium");
-//                textViewPasswordStrengthIndiactor.setTextColor(YELLOW);
-                textViewPasswordGraphic.setBackgroundColor(YELLOW);
-                textViewPasswordGraphic.setWidth(500);
-                textViewPasswordGraphic.setHeight(12);
-            }
-
-            else if(s.length()<17) {
-                textViewPasswordStrengthIndiactor.setText("Strong");
-//                textViewPasswordStrengthIndiactor.setTextColor(YELLOW);
-                textViewPasswordGraphic.setBackgroundColor(GREEN);
-                textViewPasswordGraphic.setWidth(850);
-                textViewPasswordGraphic.setHeight(12);
-
-            }
-
-            else {
-                textViewPasswordStrengthIndiactor.setText("Strong");
-//                textViewPasswordStrengthIndiactor.setTextColor(CYAN);
-                textViewPasswordGraphic.setBackgroundColor(GREEN);
-                textViewPasswordGraphic.setWidth(1150);
-                textViewPasswordGraphic.setHeight(12);
-            }
-
-
-            if(s.length()==20) {
-                textViewPasswordStrengthIndiactor.setText("Password Max Length Reached");
-                textViewPasswordGraphic.setBackgroundColor(DKGRAY);
-            }
-            if(s.length()>=20) {
-                textViewPasswordStrengthIndiactor.setText("Password Max Length Exceeded");
-                textViewPasswordGraphic.setBackgroundColor(DKGRAY);
             }
 
         }
@@ -236,5 +214,14 @@ public class SignUpActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.buttonRegisterSignUp:
+                registerUser();
+                break;
+        }
     }
 }

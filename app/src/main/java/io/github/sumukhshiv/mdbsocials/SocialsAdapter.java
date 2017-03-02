@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,12 +47,12 @@ public class SocialsAdapter extends RecyclerView.Adapter<SocialsAdapter.CustomVi
 
     @Override
     public void onBindViewHolder(final SocialsAdapter.CustomViewHolder holder, int position) {
+        //used to view the most recent socials at the top
         final Social social = socials.get(socials.size() - position - 1);
-        //In the onBindViewHolder, you want to set each of the parameters of ComputerCompanies very similiar
-        //to what you did to the layout manager.
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
 
+        //Adds image from Storage into the imageView
+        //Uses AsyncTask and Firebase Download from URL
         class DownloadFilesTask extends AsyncTask<String, Void, Bitmap> {
             protected Bitmap doInBackground(String... strings) {
                 try {return Glide.
@@ -69,28 +70,27 @@ public class SocialsAdapter extends RecyclerView.Adapter<SocialsAdapter.CustomVi
                 holder.imageViewEventImage.setImageBitmap(result);
             }
         }
-
-        //FirebaseOptions opts = FirebaseApp.getInstance().getOptions();
-        //Log.i(TAG, "Bucket = " + opts.getStorageBucket());
-
         FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com").child(social.image).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 (new DownloadFilesTask()).execute(uri.toString());
-//                Log.d("ye", uri.toString());
+                Log.d("AddingPhoto", uri.toString());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-//                Log.d("sad", exception.toString());
+                Log.d("Failed to add image", exception.toString());
             }
         });
-        //holder.imageViewEventIamge.setImageResource(social.drawable);
+
+
         holder.textViewEventName.setText(social.nameOfEvent);
         holder.textViewHostEmail.setText(social.emailOfHost);
         holder.textViewNumberInterested.setText(Integer.toString(social.numberIntersted));
 
 
+        //Click listener for each card. Kept as setOnCLickListener because used only once in the code
+        //Uses the social object specific to the one found in each instance of the bindViewHolder
         holder.cardViewFeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +102,6 @@ public class SocialsAdapter extends RecyclerView.Adapter<SocialsAdapter.CustomVi
                 context.startActivity(intent);
             }
         });
-
 
     }
 
@@ -131,8 +130,5 @@ public class SocialsAdapter extends RecyclerView.Adapter<SocialsAdapter.CustomVi
 
         }
     }
-
-
-
 
 }

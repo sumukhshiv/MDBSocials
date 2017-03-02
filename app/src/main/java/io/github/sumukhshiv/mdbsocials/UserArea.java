@@ -42,48 +42,23 @@ public class UserArea extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
 
-
-
-//        Button logoutButton = (Button) findViewById(R.id.buttonLogout);
-//        Button buttonNewSocial = (Button) findViewById(R.id.buttonNewSocial);
-//        Button buttonUpdateProfile = (Button) findViewById(R.id.buttonUpdateProfile);
-//
-//        logoutButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FirebaseAuth.getInstance().signOut();
-//                Intent logoutIntent = new Intent(getApplicationContext(), MainActivity.class);
-//                startActivity(logoutIntent);
-//            }
-//        });
-//
-//        buttonNewSocial.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent newSocialIntent = new Intent(getApplicationContext(), NewSocialActivity.class);
-//                startActivity(newSocialIntent);
-//            }
-//        });
-//
-//        buttonUpdateProfile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent updateProfileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-//                startActivity(updateProfileIntent);
-//            }
-//        });
-
+        //Elements for the side navbar with the series of options.
         final ListView mDrawerList;
         final ArrayAdapter<String> mAdapter;
         String[] optionsArray = {"Update Profile", "Create New Social", "Logout"};
         final Intent grabIntent = getIntent();
-
         mDrawerList = (ListView) findViewById(R.id.navList);
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionsArray);
         mDrawerList.setAdapter(mAdapter);
 
-        Toast.makeText(UserArea.this, "Swipe from the left for more options", Toast.LENGTH_LONG).show();
+        //Default toast to indicate swipe from the left reveals more options.
+        Toast.makeText(UserArea.this, "Swipe from the left for more options", Toast.LENGTH_SHORT).show();
 
+        /**
+         * Click listener for the items of the navbar. Did not implement for the class because this
+         * is not directly a view viewed by default on the screen. This works best according to
+         * StackOverFlow.
+         */
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -93,42 +68,48 @@ public class UserArea extends AppCompatActivity {
                 for(int j = 0;j < clickedItemPositions.size(); j ++){
                     boolean checked = clickedItemPositions.valueAt(j);
 
-                    if(checked){
+                    if(checked) {
                         int key = clickedItemPositions.keyAt(j);
                         String item = (String) mDrawerList.getItemAtPosition(key);
 
-                        if(item.equalsIgnoreCase("Update Profile")){
-                            Intent updateProfileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-                            updateProfileIntent.putExtra("email", grabIntent.getStringExtra("email"));
-                            startActivity(updateProfileIntent);
+                        switch (item) {
+                            case ("Update Profile"):
+                                Intent updateProfileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                                updateProfileIntent.putExtra("email", grabIntent.getStringExtra("email"));
+                                startActivity(updateProfileIntent);
+                                break;
+                            case ("Create New Social"):
+                                Intent newSocialIntent = new Intent(getApplicationContext(), NewSocialActivity.class);
+                                newSocialIntent.putExtra("email", grabIntent.getStringExtra("email"));
+                                startActivity(newSocialIntent);
+                                break;
+                            case ("Logout"):
+                                FirebaseAuth.getInstance().signOut();
+                                Intent logoutIntent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(logoutIntent);
+                                break;
+
                         }
 
-                        if(item.equalsIgnoreCase("Create New Social")){
-                            Intent newSocialIntent = new Intent(getApplicationContext(), NewSocialActivity.class);
-                            newSocialIntent.putExtra("email", grabIntent.getStringExtra("email"));
-                            startActivity(newSocialIntent);
-                        }
-
-                        if(item.equalsIgnoreCase("Logout")){
-                            FirebaseAuth.getInstance().signOut();
-                            Intent logoutIntent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(logoutIntent);
-                        }
                     }
                 }
             }
         });
 
 
-        //RECYCLER VIEW STUFF
+        /**
+         * Grabbing RecyclerView
+         * Setting LayoutManager
+         * Creating a new Adapter
+         * Attaching it to the recyclerView
+         */
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewFeed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
         arrayListSocials = new ArrayList<>();
-
         toSetSocialsAdapter = new SocialsAdapter(getApplicationContext(), arrayListSocials);
-
         recyclerView.setAdapter(toSetSocialsAdapter);
+
     }
 
     @Override
@@ -140,8 +121,13 @@ public class UserArea extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                        // TODO: handle the post
-                        //Create a new Social Object
+
+                        /**
+                         * Create a new Social Object based on what is found within Firebase
+                         * Uses the datasnapchat and intereates through all of database to create
+                         * social object for each social
+                         */
+
                         String name = postSnapshot.child("nameOfEvent").getValue(String.class);
                         String date = postSnapshot.child("date").getValue(String.class);
                         String description = postSnapshot.child("description").getValue(String.class);
@@ -168,38 +154,4 @@ public class UserArea extends AppCompatActivity {
         }
     }
 
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.android_action_bar_spinner_menu, menu);
-//
-//        MenuItem item = menu.findItem(R.id.spinner);
-//        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-//
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-//                R.array.spinner_list_item_array, android.R.layout.simple_spinner_item);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        spinner.setAdapter(adapter);
-//
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-//        {
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-//            {
-//                String selectedItem = parent.getItemAtPosition(position).toString();
-//                if(selectedItem.equals("Update Profile"))
-//                {
-//                    Intent updateProfileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-//                    startActivity(updateProfileIntent);
-//                }
-//            } // to close the onItemSelected
-//            public void onNothingSelected(AdapterView<?> parent)
-//            {
-//
-//            }
-//        });
-//
-//        return true;
-//    }
 }

@@ -19,13 +19,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-//        FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
-//
-//        if (user != null) {
-//            Intent signUpIntent = new Intent(getApplicationContext(), UserArea.class);
-//            startActivity(signUpIntent);
-//        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -36,21 +29,16 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-
                     Log.d("Login Status", "onAuthStateChanged:signed_in:" + user.getUid());
                     Intent intent = new Intent(getApplicationContext(),UserArea.class);
                     startActivity(intent);
-                    //Below is sign out code
-                    /*
-                    FirebaseAuth.getInstance().signOut();
-                    startActivity(intent);
-                    */
+
 
                 } else {
                     // User is signed out
                     Log.d("Login Status", "onAuthStateChanged:signed_out");
                 }
-                // ...
+
             }
         };
 
