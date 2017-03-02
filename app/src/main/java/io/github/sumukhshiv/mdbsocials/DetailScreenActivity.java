@@ -199,7 +199,7 @@ public class DetailScreenActivity extends AppCompatActivity {
                 buttonInterestedDetail.setText(Integer.toString(numberIntersted));
                 addInterestedToDatabase(numberIntersted, socialKey);
                 ArrayList<String> a = social.peopleInterested;
-                if (a != null && !a.contains(firebaseUser.getUid() + " hello")) {
+                if (a != null && !a.contains(firebaseUser.getUid())) {
                     a.add(firebaseUser.getUid());
                     social.peopleInterested = a;
                     ref.child("peopleInterested").setValue(a);

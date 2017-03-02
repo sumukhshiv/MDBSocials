@@ -114,30 +114,37 @@ public class NewSocialActivity extends AppCompatActivity {
                         } else {
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             final DatabaseReference myRef = database.getReference("/socials");
+                            if (editTextEventName.getText().toString().isEmpty() || editTextDate.getText().toString().isEmpty() ||
+                                    editTextDescription.getText().toString().isEmpty()) {
+                                Toast.makeText(getApplicationContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                            } else if (data == null) {
+                                Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com");
+                                final String imageKey = myRef.child("socials").push().getKey();
+                                StorageReference imageRef = mStorageRef.child(imageKey + ".png");
 
-                            mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com");
-                            final String imageKey = myRef.child("socials").push().getKey();
-                            StorageReference imageRef = mStorageRef.child(imageKey + ".png");
-
-                            imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    ArrayList<String> memberArrayList = new ArrayList<String>();
-                                    memberArrayList.add(firebaseUser.getUid());
-                                    Social socialToPost = new Social(editTextEventName.getText().toString(), editTextDate.getText().toString(), editTextDescription.getText().toString(),
-                                            imageKey + ".png", firebaseUser.getEmail(), 1, memberArrayList);
+                                imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        ArrayList<String> memberArrayList = new ArrayList<String>();
+                                        memberArrayList.add(firebaseUser.getUid());
+                                        Social socialToPost = new Social(editTextEventName.getText().toString(), editTextDate.getText().toString(), editTextDescription.getText().toString(),
+                                                imageKey + ".png", firebaseUser.getEmail(), 1, memberArrayList);
 //                        socialToPost.peopleInterested.add(firebaseUser.getUid());
-                                    myRef.child(imageKey).setValue(socialToPost);
-                                    Toast.makeText(getApplicationContext(), "Posted new Social!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), UserArea.class);
-                                    startActivity(intent);
-                                }
-                            });
+                                        myRef.child(imageKey).setValue(socialToPost);
+                                        Toast.makeText(getApplicationContext(), "Posted new Social!", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getApplicationContext(), UserArea.class);
+                                        startActivity(intent);
+                                    }
+                                });
+
+                            }
 
 
                         }

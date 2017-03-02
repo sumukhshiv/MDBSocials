@@ -38,6 +38,10 @@ public class SocialsAdapter extends RecyclerView.Adapter<SocialsAdapter.CustomVi
         this.socials = socials;
     }
 
+    public void setSocialsList(ArrayList<Social> list) {
+        socials = list;
+    }
+
     @Override
     public SocialsAdapter.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_view, parent, false);

@@ -139,6 +139,7 @@ public class UserArea extends AppCompatActivity {
             mSocialsEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Social> temp = new ArrayList<>();
                     for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                         // TODO: handle the post
                         //Create a new Social Object
@@ -151,9 +152,10 @@ public class UserArea extends AppCompatActivity {
                         GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>() {};
                         ArrayList<String> listOfUsersInSocial = postSnapshot.child("peopleInterested").getValue(t);
                         Social newSocial = new Social(name, date, description, image, emailOfHost, numberInterested, listOfUsersInSocial);
-                        arrayListSocials.add(newSocial);
+                        temp.add(newSocial);
                         Log.d("DEBUG", arrayListSocials.size() + "");
                     }
+                    toSetSocialsAdapter.setSocialsList(temp);
                     toSetSocialsAdapter.notifyDataSetChanged();
                 }
 

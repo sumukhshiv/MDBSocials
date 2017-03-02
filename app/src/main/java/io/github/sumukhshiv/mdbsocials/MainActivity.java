@@ -11,10 +11,12 @@ import android.widget.Button;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    Button buttonLogin;
+    Button buttonSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        buttonLogin = (Button) findViewById(R.id.buttonSignin);
+        buttonSignUp = (Button) findViewById(R.id.buttonRegister);
+
+        buttonLogin.setOnClickListener(this);
+        buttonSignUp.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -54,24 +61,23 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        Button buttonLogin = (Button) findViewById(R.id.buttonSignin);
-        Button buttonSignUp = (Button) findViewById(R.id.buttonRegister);
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent loginIntent = new Intent(getApplicationContext(), LogInActivity.class);
-                startActivity(loginIntent);
-            }
-        });
 
-        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent signUpIntent = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivity(signUpIntent);
-            }
-        });
+//        buttonLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent loginIntent = new Intent(getApplicationContext(), LogInActivity.class);
+//                startActivity(loginIntent);
+//            }
+//        });
+//
+//        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent signUpIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+//                startActivity(signUpIntent);
+//            }
+//        });
     }
 
     @Override
@@ -89,4 +95,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.buttonSignin:
+                Intent loginIntent = new Intent(MainActivity.this, LogInActivity.class);
+                startActivity(loginIntent);
+                break;
+
+            case R.id.buttonRegister:
+                Intent signUpIntent = new Intent(MainActivity.this, SignUpActivity.class);
+                startActivity(signUpIntent);
+                break;
+
+        }
+    }
 }

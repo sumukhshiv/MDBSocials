@@ -89,24 +89,27 @@ public class ProfileActivity extends AppCompatActivity {
                 mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com");
                 final String imageKey = myRef.child("users").push().getKey();
                 StorageReference imageRef = mStorageRef.child(imageKey + ".png");
-
-                imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Profile updatedProfile = new Profile(editTextUpdateName.getText().toString(), firebaseUser.getEmail(), imageKey + ".png" , new ArrayList<String>() );
-                        myRef.child(firebaseUser.getUid()).setValue(updatedProfile);
-                        Toast.makeText(getApplicationContext(), "Updated your Profile!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), UserArea.class);
-                        startActivity(intent);
-                    }
-                });
-
-
+                if (editTextUpdateName.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Please enter your name", Toast.LENGTH_SHORT).show();
+                } else if (data == null) {
+                    Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                } else {
+                    imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Profile updatedProfile = new Profile(editTextUpdateName.getText().toString(), firebaseUser.getEmail(), imageKey + ".png" , new ArrayList<String>() );
+                            myRef.child(firebaseUser.getUid()).setValue(updatedProfile);
+                            Toast.makeText(getApplicationContext(), "Updated your Profile!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), UserArea.class);
+                            startActivity(intent);
+                            }
+                    });
+                }
             }
         });
     }
