@@ -30,7 +30,7 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
-public class DetailScreenActivity extends AppCompatActivity {
+public class DetailScreenActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Social social;
     TextView textViewEventNameDetail;
@@ -41,7 +41,6 @@ public class DetailScreenActivity extends AppCompatActivity {
     Button buttonAreYouInterested;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-    int numInterestedForButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,87 +52,74 @@ public class DetailScreenActivity extends AppCompatActivity {
         buttonInterestedDetail = (Button) findViewById(R.id.buttonInterstedDetail);
         buttonAreYouInterested = (Button) findViewById(R.id.buttonAreYouInterested);
         textViewDescription = (TextView) findViewById(R.id.textViewDescription);
+        buttonAreYouInterested.setOnClickListener(this);
+        buttonInterestedDetail.setOnClickListener(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        buttonAreYouInterested.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        buttonAreYouInterested.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                DatabaseReference myRef = database.getReference("/users").child(firebaseUser.getUid());
+//
+//                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        Object user = dataSnapshot.child("email").getValue();
+//
+//                        if (user == null) {
+//                            Toast.makeText(getApplicationContext(), "Please Update Profile!",
+//                                    Toast.LENGTH_LONG).show();
+//                        } else if (social.peopleInterested.contains(firebaseUser.getUid())) {
+//                            Toast.makeText(getApplicationContext(), "You're already Interested!",
+//                                    Toast.LENGTH_LONG).show();
+//                        } else {
+//                            addInterested();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//            }
+//        });
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("/users").child(firebaseUser.getUid());
-
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Object user = dataSnapshot.child("email").getValue();
-
-                        if (user == null) {
-                            Toast.makeText(getApplicationContext(), "Please Update Profile!",
-                                    Toast.LENGTH_LONG).show();
-                        } else if (social.peopleInterested.contains(firebaseUser.getUid())) {
-                            Toast.makeText(getApplicationContext(), "You're already Interested!",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            addInterested();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-
-
-            }
-        });
-
-        buttonInterestedDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("/users").child(firebaseUser.getUid());
-
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Object user = dataSnapshot.child("email").getValue();
-
-                        if (user == null) {
-                            Toast.makeText(getApplicationContext(), "Please Update Profile!",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            Intent intent = new Intent(getApplicationContext(), InterestedMembersActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("SOCIAL", social);
-                            intent.putExtras(bundle);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-
-            }
-        });
-
-
-
-
+//        buttonInterestedDetail.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                DatabaseReference myRef = database.getReference("/users").child(firebaseUser.getUid());
+//
+//                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        Object user = dataSnapshot.child("email").getValue();
+//
+//                        if (user == null) {
+//                            Toast.makeText(getApplicationContext(), "Please Update Profile!",
+//                                    Toast.LENGTH_LONG).show();
+//                        } else {
+//                            Intent intent = new Intent(getApplicationContext(), InterestedMembersActivity.class);
+//                            Bundle bundle = new Bundle();
+//                            bundle.putSerializable("SOCIAL", social);
+//                            intent.putExtras(bundle);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//            }
+//        });
 
     }
 
@@ -165,9 +151,6 @@ public class DetailScreenActivity extends AppCompatActivity {
             }
         }
 
-        //FirebaseOptions opts = FirebaseApp.getInstance().getOptions();
-        //Log.i(TAG, "Bucket = " + opts.getStorageBucket());
-
         FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com").child(social.image).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -180,9 +163,7 @@ public class DetailScreenActivity extends AppCompatActivity {
 //                Log.d("sad", exception.toString());
             }
         });
-//        Glide.with(this)
-//                .load("http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemon.number + ".png")
-//                .into(image);
+
     }
 
     private void addInterested() {
@@ -211,37 +192,6 @@ public class DetailScreenActivity extends AppCompatActivity {
 
             }
         });
-//        ref.runTransaction(new Transaction.Handler() {
-//            @Override
-//            public Transaction.Result doTransaction(MutableData mutableData) {
-//                Log.d("debug", "we testing transaction");
-//                Social mutableSocial = mutableData.getValue(Social.class);
-//                int numInterested = 1;
-//
-//                social.numberIntersted += 1;
-//                numInterestedForButton = social.numberIntersted;
-//                buttonInterestedDetail.setText("8");
-//
-//                mutableData.child("numberIntersted").setValue(numInterestedForButton);
-//                addInterestedToDatabase(numInterestedForButton, socialKey);
-//
-//                ArrayList<String> a = social.peopleInterested;
-//
-//                if (a != null && !a.contains(firebaseUser.getUid())) {
-//                    a.add(firebaseUser.getUid());
-//                    social.peopleInterested = a;
-//                    ref.child(socialKey).child("peopleInterested").setValue(a);
-//                }
-//                mutableData.setValue(social);
-//
-//                return Transaction.success(mutableData);
-//            }
-//
-//            @Override
-//            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-//
-//            }
-//        });
 
     }
     public static void addInterestedToDatabase(int interested, String firekey) {
@@ -250,4 +200,64 @@ public class DetailScreenActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case (R.id.buttonAreYouInterested):
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("/users").child(firebaseUser.getUid());
+
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Object user = dataSnapshot.child("email").getValue();
+
+                        if (user == null) {
+                            Toast.makeText(getApplicationContext(), "Please Update Profile!",
+                                    Toast.LENGTH_LONG).show();
+                        } else if (social.peopleInterested.contains(firebaseUser.getUid())) {
+                            Toast.makeText(getApplicationContext(), "You're already Interested!",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            addInterested();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                break;
+
+            case (R.id.buttonInterstedDetail):
+                FirebaseDatabase database2 = FirebaseDatabase.getInstance();
+                DatabaseReference myRef2 = database2.getReference("/users").child(firebaseUser.getUid());
+
+                myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Object user = dataSnapshot.child("email").getValue();
+
+                        if (user == null) {
+                            Toast.makeText(getApplicationContext(), "Please Update Profile!",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Intent intent = new Intent(getApplicationContext(), InterestedMembersActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("SOCIAL", social);
+                            intent.putExtras(bundle);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                break;
+        }
+    }
 }

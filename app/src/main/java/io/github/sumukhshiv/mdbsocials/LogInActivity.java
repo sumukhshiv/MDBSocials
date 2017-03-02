@@ -17,12 +17,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText editTextEmailLogin;
     private EditText editTextPasswordLogin;
     private Button buttonSignIn;
     private TextView textViewRegister;
-
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
 
@@ -31,6 +30,7 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        //Retrieve all views from XML
         editTextEmailLogin = (EditText) findViewById(R.id.editTextEmail);
         editTextPasswordLogin = (EditText) findViewById(R.id.editTextPassword);
         buttonSignIn = (Button) findViewById(R.id.buttonSignin);
@@ -38,27 +38,16 @@ public class LogInActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         firebaseAuth = firebaseAuth.getInstance();
 
-
-        buttonSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                userLogin();
-            }
-        });
-
-        textViewRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent toHome = new Intent(LogInActivity.this, SignUpActivity.class);
-                startActivity(toHome);
-            }
-        });
+        //Adding the click listeners
+        buttonSignIn.setOnClickListener(this);
+        textViewRegister.setOnClickListener(this);
 
     }
 
-
-
-
+    /**
+     * Modular function that Logs users into the app. Takes in no arguments and returns nothing.
+     * Series of actions completed to login user using FirebaseAuth call.
+     */
     public void userLogin() {
         final String email = editTextEmailLogin.getText().toString().trim();
         String password = editTextPasswordLogin.getText().toString().trim();
@@ -84,7 +73,6 @@ public class LogInActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
                             Toast.makeText(LogInActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                            //finish();
                             Intent loginToFeedIntent = new Intent(LogInActivity.this, UserArea.class);
                             loginToFeedIntent.putExtra("email", email);
                             startActivity(loginToFeedIntent);
@@ -99,5 +87,16 @@ public class LogInActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.buttonSignin:
+                userLogin();
+                break;
+            case R.id.textViewRegister:
+                Intent toHome = new Intent(LogInActivity.this, SignUpActivity.class);
+                startActivity(toHome);
+        }
+    }
 
 }
