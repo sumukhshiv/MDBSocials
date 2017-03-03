@@ -8,7 +8,7 @@
     tools:context="io.github.sumukhshiv.mdbsocials.MainActivity">
 
     <TextView
-        android:text="Welcome to MDB Socials!"
+        android:text="@string/welcome_to_mdb_socials"
         android:layout_width="352dp"
         android:layout_height="103dp"
         android:id="@+id/textViewTitle"
@@ -24,7 +24,7 @@
         app:layout_constraintHorizontal_bias="0.36" />
 
     <Button
-        android:text="Login"
+        android:text="@string/login3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonSignin"
@@ -38,7 +38,7 @@
         android:layout_marginLeft="16dp" />
 
     <Button
-        android:text="Register"
+        android:text="@string/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonRegister"

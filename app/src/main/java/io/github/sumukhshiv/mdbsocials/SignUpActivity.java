@@ -1,7 +1,6 @@
 package io.github.sumukhshiv.mdbsocials;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,9 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -43,8 +39,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        //assigning variables
         mAuth = FirebaseAuth.getInstance();
-
         progressDialog = new ProgressDialog(this);
         buttonRegisterUser = (Button) findViewById(R.id.buttonRegisterSignUp);
         buttonRegisterUser.setOnClickListener(this);
@@ -100,6 +96,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         }
 
+        /**
+         * Method to update the passwordStrengthGraphic in real time
+         * @param s
+         * Returns nothing, just modifies the length, color, and text of different textviews
+         */
         public void afterTextChanged(Editable s)
         {
             switch (s.length()) {
@@ -163,20 +164,25 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     };
 
+    /**
+     * Helper method used to register users into Firebase Authentication
+     * Uses the firebase createUserWithEmailAndPassword method
+     * Displays Progress Dialogue in between firebase actions
+     */
     private void registerUser() {
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
 
+        //If cases to check that all fields are filled out
+        //Separated into 3 if cases to provide more informative tests
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(this, "Please enter a valid Email Address", Toast.LENGTH_SHORT).show();
             return;
         }
-
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Please enter a Password", Toast.LENGTH_SHORT).show();
             return;
         }
-
         if (password.length() < 6) {
 
             Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
@@ -186,34 +192,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         progressDialog.setMessage("Registering User...");
         progressDialog.show();
 
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
-                            if (!email.contains("@")) {
-                                Toast.makeText(SignUpActivity.this, "Please enter a valid Email Address", Toast.LENGTH_SHORT).show();
-                            }
-                            else if (mAuth.signInWithEmailAndPassword(email, password) != null) {
-                                Toast.makeText(SignUpActivity.this, "An account with this email already exists.",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(SignUpActivity.this, "Authentication Failed.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                            progressDialog.dismiss();
-                        } else if (task.isSuccessful()) {
-                            progressDialog.dismiss();
-                            Toast.makeText(SignUpActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
-                            Intent signupToFeedIntent = new Intent(SignUpActivity.this, UserArea.class);
-                            signupToFeedIntent.putExtra("email", email);
-                            startActivity(signupToFeedIntent);
-                        }
-
-
-                    }
-                });
+        FirebaseUtils.signUp(email, password, progressDialog, this);
     }
 
     @Override

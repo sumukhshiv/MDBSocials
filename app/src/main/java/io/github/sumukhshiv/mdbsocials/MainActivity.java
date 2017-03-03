@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -49,23 +48,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
-
-
-//        buttonLogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent loginIntent = new Intent(getApplicationContext(), LogInActivity.class);
-//                startActivity(loginIntent);
-//            }
-//        });
-//
-//        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent signUpIntent = new Intent(getApplicationContext(), SignUpActivity.class);
-//                startActivity(signUpIntent);
-//            }
-//        });
     }
 
     @Override

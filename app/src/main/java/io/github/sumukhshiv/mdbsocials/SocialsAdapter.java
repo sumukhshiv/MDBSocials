@@ -14,14 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -53,7 +51,6 @@ public class SocialsAdapter extends RecyclerView.Adapter<SocialsAdapter.CustomVi
     public void onBindViewHolder(final SocialsAdapter.CustomViewHolder holder, int position) {
         //used to view the most recent socials at the top
         final Social social = socials.get(socials.size() - position - 1);
-        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         //Adds image from Storage into the imageView
         //Uses AsyncTask and Firebase Download from URL
@@ -116,7 +113,7 @@ public class SocialsAdapter extends RecyclerView.Adapter<SocialsAdapter.CustomVi
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
 
-        //Set up the variables of Computer Companies here
+        //Set up the variables
         ImageView imageViewEventImage;
         TextView textViewEventName;
         TextView textViewHostEmail;

@@ -8,7 +8,7 @@
     tools:context="io.github.sumukhshiv.mdbsocials.DetailScreenActivity">
 
     <TextView
-        android:text="TextView"
+        android:text="@string/textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewEventNameDetail"
@@ -37,7 +37,7 @@
         android:layout_height="100dp" />
 
     <TextView
-        android:text="TextView"
+        android:text="@string/textview2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewEmailDetail"
@@ -51,7 +51,7 @@
         android:layout_marginLeft="16dp" />
 
     <Button
-        android:text="Button"
+        android:text="@string/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonInterstedDetail"
@@ -66,7 +66,7 @@
         android:layout_marginTop="56dp" />
 
     <Button
-        android:text="Interested?"
+        android:text="@string/interested"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonAreYouInterested"
@@ -80,7 +80,7 @@
         android:layout_marginRight="16dp" />
 
     <TextView
-        android:text="TextView"
+        android:text="@string/textview3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewDescription"

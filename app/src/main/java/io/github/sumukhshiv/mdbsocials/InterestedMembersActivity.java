@@ -5,24 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
 public class InterestedMembersActivity extends AppCompatActivity {
 
     Social social;
-
-//    FirebaseDatabase database = FirebaseDatabase.getInstance();
-//    DatabaseReference myRef = database.getReference("/socials/" + social.peopleInterested);
-//    ValueEventListener mSocialsEventListener;
     InterestedProfilesAdapter toSetProfilesAdapter;
     ArrayList<String> profilesInterested;
 
@@ -32,6 +19,7 @@ public class InterestedMembersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interested_members);
 
+        //grab the social object to populate recyclerView
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         social = (Social) bundle.getSerializable("SOCIAL");
@@ -39,9 +27,9 @@ public class InterestedMembersActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewInterestedMembers);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+        //Grab social objects people interested arraylist for adapter
         profilesInterested = social.peopleInterested;
         toSetProfilesAdapter = new InterestedProfilesAdapter(getApplicationContext(), profilesInterested);
-
         recyclerView.setAdapter(toSetProfilesAdapter);
     }
 
@@ -52,7 +40,4 @@ public class InterestedMembersActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         social = (Social) bundle.getSerializable("SOCIAL");
     }
-
-
-
 }

@@ -1,22 +1,16 @@
 package io.github.sumukhshiv.mdbsocials;
 
 import android.content.Intent;
-import android.renderscript.Sampler;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -125,7 +119,7 @@ public class UserArea extends AppCompatActivity {
 
                         /**
                          * Create a new Social Object based on what is found within Firebase
-                         * Uses the datasnapchat and intereates through all of database to create
+                         * Uses the datasnapchat and integrates through all of database to create
                          * social object for each social
                          */
 
@@ -149,7 +143,6 @@ public class UserArea extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {
                     // Getting Post failed, log a message
                     //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                    // ...
                 }
             };
             myRef.addValueEventListener(mSocialsEventListener);

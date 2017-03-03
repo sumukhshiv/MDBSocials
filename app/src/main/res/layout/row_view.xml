@@ -36,7 +36,7 @@
             android:layout_marginTop="8dp" />
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textViewHostEmail"
@@ -47,7 +47,7 @@
             android:layout_marginBottom="8dp" />
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textViewNumberInterested"

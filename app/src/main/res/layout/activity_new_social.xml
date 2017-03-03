@@ -13,7 +13,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editTextEventName"
-        android:hint="Name of Event"
+        android:hint="@string/name_of_event"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="16dp"
@@ -29,13 +29,13 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/editTextDescription"
-        android:hint="Description"
+        android:hint="@string/description"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/editTextDate"
         app:layout_constraintLeft_toLeftOf="@+id/editTextDate" />
 
     <Button
-        android:text="Upload a Picture"
+        android:text="@string/upload_a_picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonUploadPicture"
@@ -49,7 +49,7 @@
         android:inputType="datetime"
         android:ems="10"
         android:id="@+id/editTextDate"
-        android:hint="Date"
+        android:hint="@string/date"
         app:layout_constraintLeft_toLeftOf="@+id/editTextEventName"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/editTextEventName" />
@@ -64,7 +64,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/buttonUploadPicture" />
 
     <Button
-        android:text="Post"
+        android:text="@string/post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonPost"

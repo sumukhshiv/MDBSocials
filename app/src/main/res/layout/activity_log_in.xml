@@ -8,7 +8,7 @@
     tools:context="io.github.sumukhshiv.mdbsocials.LogInActivity">
 
     <TextView
-        android:text="Login"
+        android:text="@string/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewLoginTitle"
@@ -35,7 +35,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="16dp"
-        android:hint="Email"
+        android:hint="@string/email"
         android:layout_marginTop="64dp"
         app:layout_constraintTop_toBottomOf="@+id/textViewLoginTitle" />
 
@@ -52,10 +52,10 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="16dp"
         app:layout_constraintTop_toBottomOf="@+id/editTextEmail"
-        android:hint="Password" />
+        android:hint="@string/password" />
 
     <Button
-        android:text="Login"
+        android:text="@string/login2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonSignin"
@@ -69,7 +69,7 @@
         android:layout_marginLeft="16dp" />
 
     <TextView
-        android:text="Not Registered? Signup here."
+        android:text="@string/not_registered_signup_here"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewRegister"

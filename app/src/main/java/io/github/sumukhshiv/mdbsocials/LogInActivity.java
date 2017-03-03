@@ -12,9 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
@@ -23,7 +20,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private Button buttonSignIn;
     private TextView textViewRegister;
     private FirebaseAuth firebaseAuth;
-    private ProgressDialog progressDialog;
+    public ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,25 +63,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         progressDialog.setMessage("Logging in User...");
         progressDialog.show();
 
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            Toast.makeText(LogInActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                            Intent loginToFeedIntent = new Intent(LogInActivity.this, UserArea.class);
-                            loginToFeedIntent.putExtra("email", email);
-                            startActivity(loginToFeedIntent);
-                        } else if (!task.isSuccessful()) {
-                            Toast.makeText(LogInActivity.this, "Email/Password combination is not correct. Please Try Again.", Toast.LENGTH_LONG).show();
-                        }
-
-
-
-                    }
-                });
-
+        FirebaseUtils.login(email, password, progressDialog, this);
     }
 
     @Override
