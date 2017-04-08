@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -69,8 +71,7 @@ public class DetailScreenActivity extends AppCompatActivity implements View.OnCl
         super.onResume();
 
         //grabbing the social, which was just clicked on from UserArea
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
+        Bundle bundle = getIntent().getExtras();
         social = (Social) bundle.getSerializable("SOCIAL");
 
         //Setting different aspects of the Detail Screen View
@@ -78,22 +79,17 @@ public class DetailScreenActivity extends AppCompatActivity implements View.OnCl
         emailDetail.setText(social.emailOfHost);
         buttonInterestedDetail.setText(Integer.toString(social.numberIntersted));
         textViewDescription.setText(social.description);
+
         class DownloadFilesTask extends AsyncTask<String, Void, Bitmap> {
             protected Bitmap doInBackground(String... strings) {
-                //Adding image to imageView on the Detail Screen using AsyncTask (w/o Glide)
-                try {
-                    urlString = strings[0];
-                    URL url = new URL(urlString);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    InputStream input = connection.getInputStream();
-                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                    return myBitmap;
-                } catch (IOException e) {
-                    return null;
-                }
-        }
+                try {return Glide.
+                        with(getApplicationContext()).
+                        load(strings[0]).
+                        asBitmap().
+                        into(100, 100). // Width and height
+                        get();}
+                catch (Exception e) {return null;}
+            }
 
             protected void onProgressUpdate(Void... progress) {}
 
@@ -101,6 +97,30 @@ public class DetailScreenActivity extends AppCompatActivity implements View.OnCl
                 imageViewDetail.setImageBitmap(result);
             }
         }
+
+//        class DownloadFilesTask extends AsyncTask<String, Void, Bitmap> {
+//            protected Bitmap doInBackground(String... strings) {
+//                //Adding image to imageView on the Detail Screen using AsyncTask (w/o Glide)
+//                try {
+//                    urlString = strings[0];
+//                    URL url = new URL(urlString);
+//                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//                    connection.setDoInput(true);
+//                    connection.connect();
+//                    InputStream input = connection.getInputStream();
+//                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
+//                    return myBitmap;
+//                } catch (IOException e) {
+//                    return null;
+//                }
+//        }
+//
+//            protected void onProgressUpdate(Void... progress) {}
+//
+//            protected void onPostExecute(Bitmap result) {
+//                imageViewDetail.setImageBitmap(result);
+//            }
+//        }
 
         FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com").child(social.image).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override

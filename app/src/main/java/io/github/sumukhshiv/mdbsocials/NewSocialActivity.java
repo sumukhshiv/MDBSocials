@@ -130,81 +130,95 @@ public class NewSocialActivity extends AppCompatActivity implements View.OnClick
 
             //Posting the Social Firebase and Newsfeed
             case (R.id.buttonPost):
-
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                final DatabaseReference myRef = database.getReference("/users").child(firebaseUser.getUid());
-
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Object user = dataSnapshot.child("email").getValue();
-
-                        if (user == null) {
-                            progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "Please Update Profile!",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            final DatabaseReference myRef = database.getReference("/socials");
-
-                            //Used if-else because only 3 options and not all check for same type data as required by switch statement
-                            //Check all text is filled out
-                            if (editTextEventName.getText().toString().isEmpty() || editTextDate.getText().toString().isEmpty() ||
-                                    editTextDescription.getText().toString().isEmpty()) {
-                                progressDialog.dismiss();
-                                Toast.makeText(getApplicationContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
-                            }
-                            //Check if image is not yet added
-                            else if (data == null) {
-                                progressDialog.dismiss();
-                                Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
-                            }
-
-                            //Else actually post the social with all the above fields
-                            else {
-                                progressDialog.setMessage("Uploading New Social...");
-                                progressDialog.show();
-
-                                mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com");
-                                final String imageKey = myRef.child("socials").push().getKey();
-                                StorageReference imageRef = mStorageRef.child(imageKey + ".png");
-
-                                //Adding the photo to Storage
-                                //Intentionally did not add to Utils class, too many dependencies, created more confusion
-                                //than modularity
-                                imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                        //image was successfully added to Storage
-                                        ArrayList<String> memberArrayList = new ArrayList<String>();
-                                        memberArrayList.add(firebaseUser.getUid());
-
-                                        //Create new Social Object to add to Database and save Social
-                                        Social socialToPost = new Social(editTextEventName.getText().toString(), editTextDate.getText().toString(), editTextDescription.getText().toString(),
-                                                imageKey + ".png", firebaseUser.getEmail(), 1, memberArrayList);
-                                        myRef.child(imageKey).setValue(socialToPost);
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getApplicationContext(), "Posted new Social!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), UserArea.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+                postSocial();
                 break;
         }
     }
+
+
+    /**
+     * Modularized function to post a newly created social on the feed.
+     * Called when buttonPost is clicked
+     * No arguments
+     * Returns Void
+     */
+    public void postSocial() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference("/users").child(firebaseUser.getUid());
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Object user = dataSnapshot.child("email").getValue();
+
+                if (user == null) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Please Update Profile!",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    final DatabaseReference myRef = database.getReference("/socials");
+
+                    //Used if-else because only 3 options and not all check for same type data as required by switch statement
+                    //Check all text is filled out
+                    if (editTextEventName.getText().toString().isEmpty() || editTextDate.getText().toString().isEmpty() ||
+                            editTextDescription.getText().toString().isEmpty()) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                    }
+                    //Check if image is not yet added
+                    else if (data == null) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                    }
+
+                    //Else actually post the social with all the above fields
+                    else {
+                        progressDialog.setMessage("Uploading New Social...");
+                        progressDialog.show();
+
+                        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-e2598.appspot.com");
+                        final String imageKey = myRef.child("socials").push().getKey();
+                        StorageReference imageRef = mStorageRef.child(imageKey + ".png");
+
+                        //Adding the photo to Storage
+                        //Intentionally did not add to Utils class, too many dependencies, created more confusion
+                        //than modularity
+                        imageRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "Please upload an image", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                //image was successfully added to Storage
+                                ArrayList<String> memberArrayList = new ArrayList<String>();
+                                memberArrayList.add(firebaseUser.getUid());
+
+                                //Create new Social Object to add to Database and save Social
+                                Social socialToPost = new Social(editTextEventName.getText().toString(), editTextDate.getText().toString(), editTextDescription.getText().toString(),
+                                        imageKey + ".png", firebaseUser.getEmail(), 1, memberArrayList);
+                                myRef.child(imageKey).setValue(socialToPost);
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "Posted new Social!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), UserArea.class);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+
+
 }

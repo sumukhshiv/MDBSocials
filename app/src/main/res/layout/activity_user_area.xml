@@ -13,6 +13,7 @@
         android:id="@+id/activity_user_area"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#D3D3D3"
         tools:context="io.github.sumukhshiv.mdbsocials.UserArea">
 
         <android.support.v7.widget.RecyclerView

@@ -12,6 +12,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Created by sumukhshivakumar on 3/2/17.
  */
@@ -49,18 +52,8 @@ public class FirebaseUtils {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-
-                            //Various checks to see whether user input is valid
-                            if (!email.contains("@")) {
-                                Toast.makeText(context, "Please enter a valid Email Address", Toast.LENGTH_SHORT).show();
-                            }
-                            else if (mAuth.signInWithEmailAndPassword(email, password) != null) {
-                                Toast.makeText(context, "An account with this email already exists.",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, "Authentication Failed.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                            //Prints the reason why the user was unable to register
+                            Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                         } else if (task.isSuccessful()) {
                             //case where registration was successful
@@ -77,4 +70,5 @@ public class FirebaseUtils {
                     }
                 });
     }
+
 }

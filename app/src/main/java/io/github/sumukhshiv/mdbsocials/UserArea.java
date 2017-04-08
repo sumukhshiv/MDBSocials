@@ -31,10 +31,12 @@ public class UserArea extends AppCompatActivity {
     ValueEventListener mSocialsEventListener;
     SocialsAdapter toSetSocialsAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
+
 
         //Elements for the side navbar with the series of options.
         final ListView mDrawerList;
@@ -47,6 +49,7 @@ public class UserArea extends AppCompatActivity {
 
         //Default toast to indicate swipe from the left reveals more options.
         Toast.makeText(UserArea.this, "Swipe from the left for more options", Toast.LENGTH_SHORT).show();
+
 
         /**
          * Click listener for the items of the navbar. Did not implement for the class because this
@@ -103,6 +106,8 @@ public class UserArea extends AppCompatActivity {
         arrayListSocials = new ArrayList<>();
         toSetSocialsAdapter = new SocialsAdapter(getApplicationContext(), arrayListSocials);
         recyclerView.setAdapter(toSetSocialsAdapter);
+
+
 
     }
 

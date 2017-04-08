@@ -11,7 +11,7 @@ public class InterestedMembersActivity extends AppCompatActivity {
 
     Social social;
     InterestedProfilesAdapter toSetProfilesAdapter;
-    ArrayList<String> profilesInterested;
+
 
 
     @Override
@@ -28,8 +28,7 @@ public class InterestedMembersActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         //Grab social objects people interested arraylist for adapter
-        profilesInterested = social.peopleInterested;
-        toSetProfilesAdapter = new InterestedProfilesAdapter(getApplicationContext(), profilesInterested);
+        toSetProfilesAdapter = new InterestedProfilesAdapter(getApplicationContext(), social.peopleInterested);
         recyclerView.setAdapter(toSetProfilesAdapter);
     }
 
